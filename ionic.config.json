@@ -1,0 +1,7 @@
+{
+  "name": "cookster_25",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

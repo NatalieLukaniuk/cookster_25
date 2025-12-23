@@ -1,3 +1,36 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu contentId="main-content">
+
+    <ion-content>
+      <ion-menu-toggle>
+        <ion-list lines="full">
+          <ion-item href="/calendar" router-direction="root">
+           Calendar
+          </ion-item>
+          <ion-item href="/home" router-direction="root">
+            Home
+          </ion-item>
+        </ion-list>
+
+      </ion-menu-toggle>
+
+    </ion-content>
+  </ion-menu>
+  <div id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+           <!-- TODO Dynamic page name here -->
+          Menu
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-router-outlet></ion-router-outlet>
+    </ion-content>
+  </div>
+
 </ion-app>

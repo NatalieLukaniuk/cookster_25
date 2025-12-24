@@ -12,7 +12,6 @@ export class ProductsApiService {
   ingredsToAddUrl = `https://cookster-12ac8-default-rtdb.firebaseio.com/ingredientsToAdd`;
 
   http = inject(HttpClient);
-  productsService = inject(ProductsService);
 
   addProduct(product: any): Observable<{ name: string }> {
     return this.http.post<{ name: string }>(`${this.url}.json`, product);
@@ -22,23 +21,8 @@ export class ProductsApiService {
     return this.http.delete(`${this.url}/${product.id}.json`);
   }
 
-  getProducts(): Observable<Product[]> {
-    return this.http.get(`${this.url}.json`).pipe(
-      map((res: Object) => {
-        let array = Object.entries(res);
-        let products: any = [];
-        for (let entry of array) {
-          let product: any = {
-            id: entry[0],
-            ...entry[1],
-          };
-          products.push(product);
-        }
-        products.reverse();
-        this.productsService.setAllProducts(products);
-        return products
-      })
-    );
+  getProducts(): Observable<any> {
+    return this.http.get(`${this.url}.json`);
   }
 
   updateProduct(id: string, data: Product) {

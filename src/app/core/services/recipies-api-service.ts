@@ -11,7 +11,6 @@ export class RecipiesApiService {
   url = `https://cookster-12ac8-default-rtdb.firebaseio.com/recipies`;
 
   http = inject(HttpClient);
-  recipiesService = inject(RecipiesService)
 
   addRecipy(recipy: NewRecipy): Observable<{ name: string }> {
     return this.http.post<{ name: string }>(`${this.url}.json`, recipy);
@@ -22,22 +21,7 @@ export class RecipiesApiService {
   }
 
   getRecipies(): Observable<Recipy[]> {
-    return this.http.get<Recipy[]>(`${this.url}.json`).pipe(
-      map((res: Object) => {
-        let array = Object.entries(res);
-        let recipies: Recipy[] = [];
-        for (let entry of array) {
-          let recipy: any = {
-            id: entry[0],
-            ...entry[1],
-          };
-          recipies.push(recipy);
-        }
-        recipies.reverse();
-        this.recipiesService.setAllRecipies(recipies);
-        return recipies
-      })
-    );
+    return this.http.get<Recipy[]>(`${this.url}.json`)
   }
 
   getRecipyById(id: string): Observable<Recipy> {

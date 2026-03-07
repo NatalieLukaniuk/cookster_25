@@ -11,11 +11,19 @@ export class UserService {
 
   authApiService = inject(AuthApiService)
 
-  currentUser = signal<User | null>(null);
-  allUsers = signal<User[] | undefined>(undefined);
+  private currentUser = signal<User | null>(null);
+  private allUsers = signal<User[] | undefined>(undefined);
   userAtFirebaseAuth = signal<User | undefined>(undefined);
 
-  currentUserId: Signal<string | null> = computed(() => {
+  $currentUser = this.currentUser.asReadonly();
+  $isAuthorized = computed(() => !!this.currentUser());
+
+
+  logOut() {
+    this.currentUser.set(null)
+  }
+
+  private currentUserId: Signal<string | null> = computed(() => {
     const currentUser = this.currentUser()
     if (!!currentUser && currentUser.id) {
       return currentUser.id
@@ -23,17 +31,17 @@ export class UserService {
       return null
     }
   });
-  
+
   plannedRecipies: Signal<CalendarRecipyInDatabase_Reworked[]> = computed(() => {
     const currentUser = this.currentUser();
-    if(currentUser && currentUser.plannedRecipies){
+    if (currentUser && currentUser.plannedRecipies) {
       return currentUser.plannedRecipies
     } else {
       return []
     }
   })
 
-  allUsersMapping = signal<UserMappingItem[]>([]);
+  private allUsersMapping = signal<UserMappingItem[]>([]);
 
   getUserData(user: User) {
     this.authApiService

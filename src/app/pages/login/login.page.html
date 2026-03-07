@@ -1,0 +1,27 @@
+
+    <div class="page-wrapper">
+    @if(!isRegistration() && loginForm){
+    <form [formGroup]="loginForm" (ngSubmit)="submit()">
+      <ion-list>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Електронна пошта" type="email" placeholder="Введіть адресу електронної пошти"
+            formControlName="username" errorText="Неправильний формат електронного адресу"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Пароль" labelPlacement="floating" errorText="Мінімальна довжина: 6 символів" helperText="Мінімальна довжина: 6 символів"
+            type="password" formControlName="password"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-button expand="full" [disabled]="!loginForm.valid" type="submit">Залогінитись</ion-button>
+    </form>
+
+    <div class="not-registered">
+      <h6>Новий користувач?</h6>
+      <ion-button expand="full" type="button" (click)="goRegistration()">Зареєструватись</ion-button>
+    </div>
+    }
+
+  </div>
+
+

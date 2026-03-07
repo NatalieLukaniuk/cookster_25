@@ -70,7 +70,7 @@ export class AuthService {
     }
 
     processIsNotLoggedIn() {
-        this.userService.currentUser.set(null);
-        // this.store.dispatch(new UserActions.UserLoggedOutAction());
+        this.userService.logOut()
+
     }
 }

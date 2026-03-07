@@ -17,17 +17,20 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { RecipiesService } from './core/services/recipies-service';
 import { ProductsService } from './core/services/products-service';
+import { UserService } from './core/services/user-service';
 
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
+  styleUrl: './app.component.scss',
   imports: [IonMenuToggle, IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonTitle, IonToolbar, IonApp, IonRouterOutlet, RouterModule, IonList, IonItem],
 })
 export class AppComponent {
   authService = inject(AuthService);
   recipiesService = inject(RecipiesService);
   productsService = inject(ProductsService);
+  userService = inject(UserService)
 
   firebaseConfig = {
     apiKey: 'AIzaSyAYe2tCdCuYoEPi0grZ1PkHTHgScw19LpA',
@@ -40,7 +43,7 @@ export class AppComponent {
   };
 
   isAuthCheckComplete = signal(false);
-  isLoggedIn = signal(false);
+  isLoggedIn = this.userService.$isAuthorized;
 
   Role = Role;
 
@@ -57,13 +60,14 @@ export class AppComponent {
 
   subscribeIsLoggedIn() {
     getAuth().onAuthStateChanged((user: { email: any; uid: any } | null) => {
-      this.isAuthCheckComplete.set(true);
-      this.isLoggedIn.set(!!user);
+      
+      // this.isLoggedIn.set(!!user);
       if (user) {
         this.authService.processIsLoggedIn(user);
       } else {
         this.authService.processIsNotLoggedIn();
       }
+      this.isAuthCheckComplete.set(true);
     });
   }
 

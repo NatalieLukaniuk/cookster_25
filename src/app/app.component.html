@@ -4,9 +4,17 @@
     <ion-content>
       <ion-menu-toggle>
         <ion-list lines="full">
-          <ion-item href="/calendar" router-direction="root">
-           Calendar
+          @if(!isLoggedIn()){
+          <ion-item href="/login" router-direction="root">
+            Log in
           </ion-item>
+          }
+          @if(isLoggedIn()){
+          <ion-item href="/calendar" router-direction="root">
+            Calendar
+          </ion-item>
+          }
+
           <ion-item href="/home" router-direction="root">
             Home
           </ion-item>
@@ -16,14 +24,14 @@
 
     </ion-content>
   </ion-menu>
-  <div id="main-content">
+  <div id="main-content" class="main-content">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>
-           <!-- TODO Dynamic page name here -->
+          <!-- TODO Dynamic page name here -->
           Menu
         </ion-title>
       </ion-toolbar>

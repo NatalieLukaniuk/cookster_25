@@ -1,5 +1,5 @@
 <ion-app>
-  <ion-menu contentId="main-content">
+  <ion-menu contentId="main-content" [side]="'end'">
 
     <ion-content>
       <ion-menu-toggle>
@@ -27,12 +27,17 @@
   <div id="main-content" class="main-content">
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
+        <ion-buttons slot="end">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>
-          <!-- TODO Dynamic page name here -->
-          Menu
+          <div class="main-header">
+            <ion-img class="logo" src="../assets/images/humster_sm.png"></ion-img>
+            <div class="title">
+              <div class="title-main">Cookster</div>
+              <div class="title-sub">Organize your cooking!</div>
+            </div>
+          </div>
         </ion-title>
       </ion-toolbar>
     </ion-header>

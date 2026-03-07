@@ -1,6 +1,6 @@
 import { AuthService } from './core/services/auth-service';
 import { Component, inject, signal } from '@angular/core';
-import { IonApp, IonRouterOutlet, IonList, IonItem } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, IonList, IonItem, IonImg } from '@ionic/angular/standalone';
 import {
   IonButtons,
   IonContent,
@@ -24,7 +24,7 @@ import { UserService } from './core/services/user-service';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrl: './app.component.scss',
-  imports: [IonMenuToggle, IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonTitle, IonToolbar, IonApp, IonRouterOutlet, RouterModule, IonList, IonItem],
+  imports: [IonImg, IonMenuToggle, IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonTitle, IonToolbar, IonApp, IonRouterOutlet, RouterModule, IonList, IonItem],
 })
 export class AppComponent {
   authService = inject(AuthService);

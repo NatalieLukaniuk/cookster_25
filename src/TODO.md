@@ -2,6 +2,7 @@
 - short-recipy-view component: logic to display user meals preferences chips;   onAddRecipyToCalendar, goFullRecipy methods; view for desktop
 - full recipy page
 - filters
+- when all recipies are received from BE, map them to add addLastPrepared property - this probably needs to be done in the recipiesService
 
 improvements:
 search for [REWORK] tag

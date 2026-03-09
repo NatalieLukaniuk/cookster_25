@@ -1,0 +1,5 @@
+@if(currentUser() && recipy()){
+<ion-button [color]="buttonColor" (click)="addToNoShow()" [size]="isSmall()? 'small' : 'default'" fill="clear">
+  <ion-icon size="small" slot="icon-only" [name]="isHidden()? 'eye-outline': 'eye-off-outline'"></ion-icon>
+</ion-button>
+}

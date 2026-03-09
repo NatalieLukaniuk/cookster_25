@@ -1,8 +1,9 @@
 import { computed, inject, Injectable, Signal, signal } from '@angular/core';
-import { User, UserMappingItem } from '../models/auth.models';
+import { defaultPrefs, User, UserMappingItem } from '../models/auth.models';
 import { AuthApiService } from './auth-api-service';
 import { take } from 'rxjs';
 import { CalendarRecipyInDatabase_Reworked } from '../models/calendar.models';
+import { Recipy } from '../models/recipies.models';
 
 @Injectable({
   providedIn: 'root',
@@ -115,4 +116,27 @@ export class UserService {
   //     return of(null);
   //   }
   // }
+
+  addRecipyToNoShow(recipy: Recipy) {
+    const currentUser = this.currentUser()
+    if (currentUser) {
+      if (!currentUser.preferences) {
+        currentUser.preferences = {
+          ...defaultPrefs,
+          noShowRecipies: [recipy.id]
+        }
+      } else if (!currentUser.preferences!.noShowRecipies) {
+        currentUser.preferences = {
+          ...currentUser.preferences!,
+          noShowRecipies: [recipy.id]
+        }
+      } else {
+        currentUser.preferences!.noShowRecipies.push(recipy.id)
+      }
+      this.authApiService.updateUser(currentUser!.id!, currentUser).pipe(take(1)).subscribe(res => {
+        this.currentUser.set(res)
+      })
+    }
+
+  }
 }

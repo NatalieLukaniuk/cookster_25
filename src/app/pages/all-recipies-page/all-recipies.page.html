@@ -1,2 +1,10 @@
-
-  home
+<ion-content>
+  <ion-list class="recipies-background">
+  @for (recipy of recipiesToDisplay; track recipy; let index = $index) {
+  <app-recipy-short-view [recipy]="recipy"></app-recipy-short-view>
+  }
+</ion-list>
+<ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+  <ion-infinite-scroll-content></ion-infinite-scroll-content>
+</ion-infinite-scroll>
+</ion-content>

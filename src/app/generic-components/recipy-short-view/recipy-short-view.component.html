@@ -1,0 +1,222 @@
+<ion-item-sliding>
+  <ion-item lines="none">
+    <ion-card (click)="onRecipyClicked()">
+      <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
+
+      <ion-card-content>
+        @if(recipy().photo){
+        <app-image [imagePath]="recipy().photo!"></app-image>
+        }
+        @else {
+        <div class="photo-placeholder">
+          <ion-img class="humster" src="../../../../assets/images/humster_sm.png"></ion-img>
+          <div class="photo-placeholder-text">Хом'ячок вже планує фотосесію для цього рецепту</div>
+        </div>
+        }
+
+
+      </ion-card-content>
+      <div class="overlay once" [class.visible]="isRecipyClicked()">
+        <div class="overlay-flex-container">
+          <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
+          <!-- <div>
+            <div class="ingredients-wrapper">
+              <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
+            </div>
+          </div> -->
+        </div>
+
+
+      </div>
+    </ion-card>
+
+  </ion-item>
+
+  <ion-item-options>
+    @if(!!currentUser()){
+    <div class="actions-pane">
+      <div class="actions-pane-info"><ion-icon name="today-outline"></ion-icon>
+        @if(!!recipy().lastPrepared){
+        <span>{{recipy().lastPrepared! | lastPreparedDate }}</span>
+        }
+        @else {
+        <span class="color-warning">не готувався</span>
+        }
+
+
+      </div>
+      <app-add-recipy-to-no-show [isSmall]="false" [recipy]="recipy()"
+        [buttonColor]="'primary'" (btnClicked)="cancelClickNoTimeout()"></app-add-recipy-to-no-show>
+      <app-collections-action-sheet [recipy]="recipy()"
+        (dismissed)="cancelClickNoTimeout()"></app-collections-action-sheet>
+      <ion-button (click)="onAddRecipyToCalendar()" fill="clear">
+
+        <ion-icon name="calendar-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="goFullRecipy()" fill="clear" class="go-recipy-btn">
+
+        Відкрити рецепт
+      </ion-button>
+
+    </div>
+    }
+
+
+  </ion-item-options>
+  <ion-item-options side="start">
+    <div class="steps-block-wrapper">
+      <div class="preparation-block">
+        <div>
+          <span>
+            <ion-icon name="american-football-outline"></ion-icon>
+            {{ activePreparationTime() | normalizeTime }}
+          </span>
+          <span>
+            <ion-icon name="beer-outline"></ion-icon>
+            {{ passivePreparationTime() | normalizeTime }}
+          </span>
+        </div>
+        <ng-container *ngTemplateOutlet="preparation"></ng-container>
+      </div>
+
+    </div>
+  </ion-item-options>
+</ion-item-sliding>
+
+<ng-template #genericInfo>
+  <ion-card-header>
+    <div>
+      <ion-card-title>{{ recipy().name }}</ion-card-title>
+      <ion-card-subtitle>
+        @if(includedInCollections().length){
+        <div class="collection-tags">
+          <!-- <span>Мої колекції: </span> -->
+          @for (collection of includedInCollections(); track collection; let index = $index){
+          <ion-chip class="collection-chip">{{
+            collection
+            }}</ion-chip>
+          }
+
+        </div>
+        }
+
+
+      </ion-card-subtitle>
+    </div>
+    <div>
+      @if(recipy().calorificValue){
+      <div class="header-info-chip">
+        {{ Math.round(recipy().calorificValue!) }} ккал/100гр.
+      </div>
+      }
+
+
+      <div class="header-info-chip">
+        <span>
+          <ion-icon name="american-football-outline"></ion-icon>
+          {{ activePreparationTime() | normalizeTime }}
+        </span>
+      </div>
+      <div class="header-info-chip">
+        <span>
+          <ion-icon name="beer-outline"></ion-icon>
+          {{ passivePreparationTime() | normalizeTime }}
+        </span>
+      </div>
+      <div class="header-info-chip">
+        @if(isNeedsAdvancePreparation()){
+        <ion-icon name="alarm"></ion-icon>
+        }
+        @if(recipy().isCheckedAndApproved){
+        <ion-icon name="checkmark-done"></ion-icon>
+        }
+
+      </div>
+      @if(!isApprovedRecipy()){
+      <div class="header-info-chip">
+        <span>
+          <ion-icon color="danger" name="hand-right"></ion-icon>
+        </span>
+
+      </div>
+      }
+
+    </div>
+
+
+  </ion-card-header>
+</ng-template>
+
+<ng-template #additionalInfo>
+  <div>
+    @if(isNeedsAdvancePreparation()){
+    <div class="time-details overlay-row">
+
+      <ion-icon name="alarm"></ion-icon>
+      <span>потребує попередньої підготовки</span>
+    </div>
+    }
+    @if(recipy().isCheckedAndApproved){
+    <div class="advance-prep overlay-row">
+      <ion-icon name="checkmark-done"></ion-icon>
+      рецепт перевірений на практиці
+    </div>
+    }
+
+    <div class="collection-tags overlay-row">
+      @for (tag of recipy().type; track $index) {
+      <ion-chip class="collection-chip">{{
+        DishType[tag]
+        }}</ion-chip>
+      }
+    </div>
+
+    @if(isShowProductsWarning()){
+    <div class="chip-selection-list">
+      @for (item of productPreferencesChips(); track $index) {
+      @if(getIsInRecipy(item.productId)){
+      <ion-chip class="collection-chip" [color]="item.color">
+        {{item.name}}: {{getProductText(item.productId)}}
+      </ion-chip>
+      }
+
+      }
+
+    </div>
+    }
+
+
+    <div>
+      <h6>Інгридієнти на 1 порцію, {{recipy().portionSize}}гр.</h6>
+      @for (ingredient of recipy().ingrediends; track $index) {
+      <div>
+        <span>
+          {{getIngredientText(ingredient).toLowerCase()}} -
+        </span>
+        @if(ingredient.defaultUnit !== MeasuringUnit.none){
+        <span [innerHTML]="ingredient.amount * coefficient()
+      | convertToSelectedUnit : ingredient.product : ingredient.defaultUnit
+      | normalizeDisplayedAmount : ingredient.defaultUnit">
+
+        </span>
+        }
+
+        <span>
+          {{getUnitText(ingredient.defaultUnit)}}
+        </span>
+      </div>
+      }
+
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #preparation>
+
+  <div class="title">Приготування:</div>
+  @for (step of recipy().steps; track $index) {
+  <div>{{step.description}}</div>
+  }
+
+</ng-template>

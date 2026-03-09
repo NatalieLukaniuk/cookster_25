@@ -139,4 +139,33 @@ export class UserService {
     }
 
   }
+
+  toggleRecipyInCollection(recipyId: string, collectionName: string) {
+    const currentUser = this.currentUser();
+    if (currentUser) {
+      if (!currentUser.collections) {
+        currentUser.collections = [{
+          name: collectionName,
+          recipies: [recipyId]
+        }]
+      } else {
+        currentUser.collections = currentUser.collections!.map((coll) => {
+          if (coll.name === collectionName) {
+            if (coll.recipies && coll.recipies.includes(recipyId)) {
+              coll.recipies = coll.recipies.filter((id) => id !== recipyId);
+            } else if (coll.recipies && !coll.recipies.includes(recipyId)) {
+              coll.recipies.push(recipyId);
+            } else {
+              coll.recipies = [recipyId];
+            }
+            return coll;
+          } else return coll;
+        })
+      }
+      this.authApiService.updateUser(currentUser!.id!, currentUser).pipe(take(1)).subscribe(res => {
+        this.currentUser.set(res)
+      })
+
+    }
+  }
 }

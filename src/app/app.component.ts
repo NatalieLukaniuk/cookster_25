@@ -18,13 +18,14 @@ import { getAuth } from 'firebase/auth';
 import { RecipiesService } from './core/services/recipies-service';
 import { ProductsService } from './core/services/products-service';
 import { UserService } from './core/services/user-service';
+import { FiltersWrapperComponent } from "./features/filters/filters-wrapper/filters-wrapper.component";
 
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrl: './app.component.scss',
-  imports: [IonImg, IonMenuToggle, IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonTitle, IonToolbar, IonApp, IonRouterOutlet, RouterModule, IonList, IonItem],
+  imports: [IonImg, IonMenuToggle, IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonTitle, IonToolbar, IonApp, IonRouterOutlet, RouterModule, IonList, IonItem, FiltersWrapperComponent],
 })
 export class AppComponent {
   authService = inject(AuthService);

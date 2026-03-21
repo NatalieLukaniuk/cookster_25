@@ -1,9 +1,11 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { NewRecipy, Recipy } from '../models/recipies.models';
 import { RecipiesApiService } from './recipies-api-service';
 import { DataMappingService } from './data-mapping-service';
 import { UiService } from './ui-service';
 import { map, Observable, take } from 'rxjs';
+import { UserService } from './user-service';
+import { FiltersService } from 'src/app/features/filters/filters.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +14,42 @@ export class RecipiesService {
   recipiesApi = inject(RecipiesApiService);
   dataMapping = inject(DataMappingService);
   uiService = inject(UiService);
+  userService = inject(UserService);
+  filterService = inject(FiltersService)
 
   private $recipies = signal<Recipy[]>([]);
-  $allRecipies = this.$recipies.asReadonly();
+
+  recipiesWithNoShowExcluded = computed(() => {
+    const noShowIds = this.userService.$currentUser()?.preferences?.noShowRecipies
+    if (noShowIds && noShowIds.length) {
+      return this.$recipies().filter(recipy => !noShowIds.includes(recipy.id))
+    } else {
+      return this.$recipies()
+    }
+  })
+
+  hiddenRecipies = computed(() => {
+    const noShowIds = this.userService.$currentUser()?.preferences?.noShowRecipies;
+    if (noShowIds && noShowIds.length) {
+      return this.$recipies().filter(recipy => noShowIds.includes(recipy.id))
+    } else {
+      return []
+    }
+  })
+
+  filteredRecipies = computed(() => {
+    let allRecipies = this.recipiesWithNoShowExcluded()
+    const currentFilters = this.filterService.currentFilters()
+    if (currentFilters.search.length) {
+      allRecipies = allRecipies.filter(recipy => recipy.name.toLowerCase().includes(currentFilters.search.toLowerCase()))
+    }
+    return allRecipies
+
+  }
+
+  ); //todo filters shpould be applied
+  filteredRecipiesCount = computed(() => this.filteredRecipies().length)
+
 
   private setAllRecipies(recipies: Recipy[]) {
     this.$recipies.set(recipies)

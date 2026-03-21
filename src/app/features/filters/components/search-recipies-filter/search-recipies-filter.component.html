@@ -1,0 +1,10 @@
+<ion-searchbar
+#searchbar
+class="searchbar"
+  placeholder="Пошук за назвою"
+  show-clear-button="always"
+  [value]="value"
+  [debounce]="500"
+  (ionInput)="onSearch($event)"
+  (ionClear)="clear()"
+></ion-searchbar>

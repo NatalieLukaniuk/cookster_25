@@ -16,7 +16,7 @@ export class AllRecipiesPage {
   userService = inject(UserService);
   currentUser = this.userService.$currentUser;
 
-  allRecipies = computed(() => this.recipiesService.$allRecipies().filter(recipy => !this.currentUser()?.preferences?.noShowRecipies?.includes(recipy.id)));
+  allRecipies = this.recipiesService.filteredRecipies
 
   recipiesToDisplay: Recipy[] = [];
 

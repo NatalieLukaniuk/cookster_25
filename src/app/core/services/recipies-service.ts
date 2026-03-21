@@ -6,6 +6,8 @@ import { UiService } from './ui-service';
 import { map, Observable, take } from 'rxjs';
 import { UserService } from './user-service';
 import { FiltersService } from 'src/app/features/filters/filters.service';
+import { RecipySorting, RecipySortingDirection } from '../models/filters.models';
+import { getActivePreparationTime, getPreparationTime } from '../utils/recipy.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -43,13 +45,36 @@ export class RecipiesService {
     if (currentFilters.search.length) {
       allRecipies = allRecipies.filter(recipy => recipy.name.toLowerCase().includes(currentFilters.search.toLowerCase()))
     }
+
+    //todo this should be after all filtering is done
+    allRecipies = this.applySorting(allRecipies, currentFilters.sorting, currentFilters.sortingDirection)
     return allRecipies
+  });
 
-  }
-
-  ); //todo filters shpould be applied
   filteredRecipiesCount = computed(() => this.filteredRecipies().length)
 
+  applySorting(recipies: Recipy[], sorting: RecipySorting, sortingDirection: RecipySortingDirection) {
+    const mapped = recipies.map(recipy => recipy)
+    switch (sorting) {
+      // case RecipySorting.ByLastPrepared: ; //TODO
+      //   break;
+      case RecipySorting.ByTotalPreparationTime: this.sortByTotalPreparationTime(mapped);
+        break;
+      case RecipySorting.ByActivePreparationTime: this.sortByActivePreparationTime(mapped);
+        break;
+    }
+    if (sortingDirection === RecipySortingDirection.BigToSmall) {
+      mapped.reverse()
+    }
+    return mapped
+  }
+
+  sortByTotalPreparationTime(recipies: Recipy[]) {
+    recipies.sort((a, b) => getPreparationTime(a) - getPreparationTime(b));
+  }
+  sortByActivePreparationTime(recipies: Recipy[]) {
+    recipies.sort((a, b) => getActivePreparationTime(a) - getActivePreparationTime(b));
+  }
 
   private setAllRecipies(recipies: Recipy[]) {
     this.$recipies.set(recipies)

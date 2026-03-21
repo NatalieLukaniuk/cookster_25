@@ -5,11 +5,12 @@ import { filterOutline } from 'ionicons/icons';
 import { FiltersService } from '../filters.service';
 import { RecipiesService } from 'src/app/core/services/recipies-service';
 import { SearchRecipiesFilterComponent } from '../components/search-recipies-filter/search-recipies-filter.component';
+import { SortingFilterComponent } from '../components/sorting-filter/sorting-filter.component';
 
 @Component({
   selector: 'app-filters-wrapper',
   templateUrl: './filters-wrapper.component.html',
-  imports: [IonContent, IonTitle, IonHeader, IonModal, IonButton, IonIcon, SearchRecipiesFilterComponent],
+  imports: [IonContent, IonTitle, IonHeader, IonModal, IonButton, IonIcon, SearchRecipiesFilterComponent, SortingFilterComponent],
   styleUrls: ['./filters-wrapper.component.scss'],
 })
 export class FiltersWrapperComponent {
